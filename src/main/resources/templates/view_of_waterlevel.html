@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>水位数据可视化-郭宏峰</title>
+
+</head>
+
+</head>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link  rel="stylesheet"  type="text/css" href="http://localhost/arcgis_js_v317_sdk/arcgis_js_api/library/3.17/3.17/dijit/themes/tundra/tundra.css"/>
+    <link  rel="stylesheet"  type="text/css" href="http://localhost/arcgis_js_v317_sdk/arcgis_js_api/library/3.17/3.17/esri/css/esri.css" />
+    <script  type="text/Javascript" src="http://localhost/arcgis_js_v317_sdk/arcgis_js_api/library/3.17/3.17/init.js"></script>
+    <script type="text/javascript">
+        require(["esri/map",
+            "dojo/dom",
+            "dojo/on",
+            "esri/layers/ArcGISDynamicMapServiceLayer",
+            "esri/layers/FeatureLayer",
+            "esri/layers/TableDataSource",
+            "esri/layers/LayerDataSource",
+            "esri/renderers/SimpleRenderer",
+            "esri/symbols/SimpleLineSymbol",
+            "dojo/domReady!"], function (
+            Map, dom, on, ArcGISDynamicMapServiceLayer, FeatureLayer, TableDataSource, LayerDataSource, SimpleRenderer, SimpleLineSymbol) {
+            var map = new Map("mapDiv");
+            var layer1 = new ArcGISDynamicMapServiceLayer("http://localhost:6080/arcgis/rest/services//Test1/MyService1/MapServer");
+            map.addLayer(layer1);
+
+            on(dom.byId("btn"), "click", function (e) {
+                //定义一个数据源
+                var dataSource = new TableDataSource();
+                //此处为我们设置的命名空间
+                dataSource.workspaceId = "my1";
+                //命名空间下面的shp
+                dataSource.dataSourceName = "giss.mxd";
+                //定义一个图层数据源
+                var layerSource = new LayerDataSource();
+                //给图层数据源赋值
+                layerSource.dataSource = dataSource;
+                //定义一个要素图层:注意链接为动态图层的地址
+                var layer2 = new FeatureLayer("http://localhost:6080/arcgis/rest/services/Test1/MyService1/MapServer/dynamicLayer", {
+                    mode: FeatureLayer.MODE_ONDEMAND,
+                    outFields: ["*"],
+                    source: layerSource
+                });
+                //定义线符号
+                var lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_DASH, new dojo.Color([255, 0, 0]), 3);
+                //定义渲染器
+                var renderer = new esri.renderer.SimpleRenderer(lineSymbol);
+                //定义渲染器
+                layer2.setRenderer(renderer);
+                layer2.refresh();
+                map.addLayer(layer2);
+            })
+
+        });
+    </script>
+</head>
+
+<body>
+    <p>水位传感器数据分析</p>
+    <p>水位数据监测，数据分析，可视化分析</p>
+    <p>当前水位</p>
+    <span>result： </span><span th:text="${name}"></span>
+    <p>水位变化率</p>
+    <span>waterlevel：</span><span th:text="${name1}"></span>
+
+</body>
+<body class="tundra">
+    <div id="mapDiv" style="width:900px; height:600px; border:1px solid #000;"></div>
+</body>
+</html>
