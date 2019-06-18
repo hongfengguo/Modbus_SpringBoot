@@ -42,6 +42,7 @@ public class DemoApplication {
         DataToTxt dataToTxt = new DataToTxt();
         DateTimeget dateTimeget = new DateTimeget();
         TestRateOfWaterLevel testRateOfWaterLevel = new TestRateOfWaterLevel();
+        value_of_WaterLevel value_of_waterLevel = new value_of_WaterLevel();
 //        testController.hello1(Model model);
         while (true) {//循环抽取数据
             testModbusDemo.main(args);
